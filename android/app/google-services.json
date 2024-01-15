@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "975627486644",
+    "project_id": "autocid-67754",
+    "storage_bucket": "autocid-67754.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975627486644:android:71b7545a206b069ea65ee1",
+        "android_client_info": {
+          "package_name": "com.example.autocid_version1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZHq1tp6psChm4y7L65BCoqFIHCI0qYl0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
