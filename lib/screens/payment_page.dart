@@ -1,4 +1,5 @@
 import 'package:autocid_version1/components/transaction_card.dart';
+import 'package:autocid_version1/screens/dynamic_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:autocid_version1/dynamic_provider.dart';

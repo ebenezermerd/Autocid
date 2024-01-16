@@ -1,8 +1,7 @@
 import 'package:autocid_version1/components/reusable_widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// Import for CupertinoDatePicker
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -21,6 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController dateController = TextEditingController();
   DateTime? selectedDate;
   String _password = '';
+  final _auth = FirebaseAuth.instance;
 
   getFullName(String value) {
     fullName = value;
@@ -41,7 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
   createDataOfUser() async {
     try {
       DocumentReference documentReference =
-          FirebaseFirestore.instance.collection('Users Data').doc(_email);
+          FirebaseFirestore.instance.collection('Users Data').doc(phoneNumber);
 
       Map<String, dynamic> userData = {
         'fullName': fullName,
@@ -74,6 +74,53 @@ class _SignUpPageState extends State<SignUpPage> {
       print(error);
       print('error has happened');
     }
+  }
+
+  void verifyPhoneNumber() async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await _auth.signInWithCredential(credential);
+        createDataOfUser();
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        print(e);
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Enter SMS Code'),
+              content: Column(
+                children: [
+                  TextField(
+                    onChanged: (value) {
+                      _password = value;
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  child: Text('Done'),
+                  onPressed: () async {
+                    PhoneAuthCredential phoneAuthCredential =
+                        PhoneAuthProvider.credential(
+                            verificationId: verificationId, smsCode: _password);
+                    await _auth.signInWithCredential(phoneAuthCredential);
+                    Navigator.pop(context);
+                    createDataOfUser();
+                  },
+                )
+              ],
+            );
+          },
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
   }
 
   @override
@@ -206,12 +253,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         color: const Color(0xFF0b984a),
                                         textColor: Colors.white,
                                         function: () {
-                                          createDataOfUser();
-                                          FirebaseAuth.instance
-                                              .createUserWithEmailAndPassword(
-                                            email: _email,
-                                            password: _password,
-                                          );
+                                          verifyPhoneNumber();
                                         }),
                                   ],
                                 )

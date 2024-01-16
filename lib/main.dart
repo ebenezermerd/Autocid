@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:autocid_version1/dynamic_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-Future<void> main() async{
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const Autocid());
   await Firebase.initializeApp();
